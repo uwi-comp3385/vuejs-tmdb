@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import type { Movie } from '../types/movie';
 import { useAppStore } from '@/stores/app';
+//import { format } from 'date-fns';
 
 const appStore = useAppStore();
 
@@ -12,7 +13,7 @@ let movie = ref<Movie>({
     title: '',
     overview: '',
     poster_path: '',
-    release_date: '',
+    release_date: Date.now().toString(),
     runtime: 0,
     status: '',
     genres: []
@@ -43,6 +44,10 @@ const getMovie = async () => {
 onMounted(async () => {
     await getMovie();
 })
+
+// function formatDate(date: string = Date.now().toString()) {
+//     return format(date, 'LLL dd, yyyy');
+// }
 </script>
 
 <template>

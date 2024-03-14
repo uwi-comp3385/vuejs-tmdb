@@ -12,7 +12,7 @@ const searchTerm = ref('');;
 const getMovies = async () => {
     loading.value = true;
 
-    const url = `${appStore.tmdbApiUrl}/movie/now_playing?language=en-US&page=1`;
+    const url = `${appStore.tmdbApiUrl}/movie/now_playing?language=en-US&include_adult=false&page=1`;
     const options = {
         method: 'GET',
         headers: {
@@ -24,7 +24,7 @@ const getMovies = async () => {
     fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         movies.value = data.results;
     }).finally(() => {
         loading.value = false
@@ -34,7 +34,12 @@ const getMovies = async () => {
 const searchMovies = () => {
     loading.value = true;
 
-    const url = `${appStore.tmdbApiUrl}/search/movie?query=${searchTerm.value}&language=en-US&page=1`;
+    if (searchTerm.value === '') {
+        getMovies();
+        return;
+    }
+
+    const url = `${appStore.tmdbApiUrl}/search/movie?query=${searchTerm.value}&language=en-US&include_adult=false&page=1`;
     const options = {
         method: 'GET',
         headers: {
@@ -46,7 +51,7 @@ const searchMovies = () => {
     fetch(url, options)
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
+        // console.log(data);
         movies.value = data.results;
     }).finally(() => {
         loading.value = false
@@ -60,20 +65,18 @@ onMounted(async () => {
 
 <template>
     <h1>Movies</h1>
-    <div class="mb-3">
-        <input type="text" class="form-control" v-model="searchTerm" @keyup.enter="searchMovies" placeholder="Enter Search Term">
-    </div>
+    <form action="#" @submit.prevent="searchMovies">
+        <div class="mb-5 input-group w-50">
+            <input type="text" class="form-control" v-model="searchTerm" @keyup.enter="searchMovies" placeholder="Enter Search Term">
+            <button class="btn btn-success">Search</button>
+        </div>
+    </form>
     <div>
         <div v-if="loading" class="spinner-border text-primary d-block text-center mb-5" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>
 
         <div class="movie-grid">
-            <!-- <div v-for="movie in movies" :key="movie.id">
-                <img class="img-thumbnail" :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" :alt="movie.title">
-                <h4 class="mt-2 fs-6"><RouterLink :to="'/movies/' + movie.id">{{ movie.title }}</RouterLink></h4>
-                <p>{{ movie.release_date }}</p>
-            </div> -->
             <MovieCard :movie="movie" v-for="movie in movies" :key="movie.id" />
         </div>
     </div>

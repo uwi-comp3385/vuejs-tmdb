@@ -1,10 +1,15 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
 import type { Movie } from "../types/movie";
+// import { format } from 'date-fns';
 
 defineProps<{
     movie: Movie;
 }>();
+
+// function formatDate(date: string) {
+//     return format(date, 'LLL dd, yyyy');
+// }
 </script>
 
 <template>
