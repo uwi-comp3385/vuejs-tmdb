@@ -7,7 +7,7 @@ import { useAppStore } from '@/stores/app';
 const appStore = useAppStore();
 let loading = ref(false);
 let movies = ref<Movie[]>([]);
-const searchTerm = ref('');;
+const searchTerm = ref('');
 
 const getMovies = async () => {
     loading.value = true;
